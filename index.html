@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minos | Evaluation and monitoring for enterprise LLM tools</title>
+<meta name="description" content="Minos is an evaluation and monitoring platform for LLM-based tools inside enterprises. Plug in a chatbot or code review bot, gate deployments in CI/CD, and keep quality in check in production with humans in the loop.">
+<meta name="theme-color" content="#0b0d10">
+<meta property="og:title" content="Minos | Evaluation and monitoring for enterprise LLM tools">
+<meta property="og:description" content="Evaluation pipelines, deployment gates and production monitoring for LLM-powered tools, with calibrated judges and human feedback.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0d10'/%3E%3Cpath d='M6 24V8l10 10L26 8v16' fill='none' stroke='%23e8b04a' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0d10;
+    --bg-2: #101318;
+    --line: #1f242c;
+    --line-2: #2a313b;
+    --text: #e7e9ec;
+    --muted: #9aa3ae;
+    --dim: #6b7480;
+    --accent: #e8b04a;
+    --accent-ink: #1a1305;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; background: var(--bg); }
+  body {
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; }
+  .wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .mono { font-family: var(--mono); }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 18px;
+  }
+  h1, h2, h3 { margin: 0; font-weight: 400; }
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(30px, 5vw, 42px);
+    line-height: 1.12;
+    letter-spacing: -.01em;
+    max-width: 18em;
+  }
+  section { padding: 96px 0; border-top: 1px solid var(--line); }
+  .lede { color: var(--muted); max-width: 40em; margin: 18px 0 0; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(11,13,16,.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+  .logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-weight: 500; font-size: 17px;
+    letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
+  }
+  .logo svg { width: 22px; height: 22px; flex: none; }
+  nav { display: flex; align-items: center; gap: 26px; }
+  nav a { font-size: 14px; color: var(--muted); text-decoration: none; transition: color .15s; }
+  nav a:hover { color: var(--text); }
+  nav a.cta {
+    color: var(--text); border: 1px solid var(--line-2); padding: 7px 14px; border-radius: 6px;
+  }
+  nav a.cta:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Hero */
+  .hero { border-top: 0; padding: 104px 0 96px; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    opacity: .45;
+    -webkit-mask-image: radial-gradient(ellipse 70% 80% at 30% 20%, #000 20%, transparent 75%);
+            mask-image: radial-gradient(ellipse 70% 80% at 30% 20%, #000 20%, transparent 75%);
+    pointer-events: none;
+  }
+  .hero .wrap { position: relative; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
+    border: 1px solid var(--line-2); border-radius: 999px; padding: 5px 12px; margin-bottom: 28px;
+  }
+  .tag i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: block; }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(38px, 7.4vw, 74px);
+    line-height: 1.04;
+    letter-spacing: -.02em;
+    max-width: 13em;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .pitch { font-size: 19px; color: var(--muted); max-width: 38em; margin: 28px 0 0; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+  .btn {
+    display: inline-block; text-decoration: none; font-weight: 500; font-size: 15px;
+    padding: 13px 22px; border-radius: 7px; border: 1px solid transparent; transition: transform .15s, background .15s, border-color .15s;
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); }
+  .btn.primary:hover { transform: translateY(-1px); background: #f0bc5c; }
+  .btn.ghost { border-color: var(--line-2); color: var(--text); }
+  .btn.ghost:hover { border-color: var(--muted); }
+
+  .strip {
+    margin-top: 72px; display: grid; grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--line-2); border-radius: 10px; background: var(--bg-2); overflow: hidden;
+  }
+  .strip div {
+    padding: 18px 20px; font-family: var(--mono); font-size: 13px; color: var(--muted);
+    border-right: 1px solid var(--line); position: relative;
+  }
+  .strip div:last-child { border-right: 0; }
+  .strip b { display: block; color: var(--text); font-weight: 500; margin-bottom: 2px; }
+  .strip div.on b { color: var(--accent); }
+
+  /* Steps */
+  .steps { list-style: none; padding: 0; margin: 52px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; counter-reset: s; }
+  .steps li {
+    padding: 0 26px 0 0; position: relative; counter-increment: s;
+  }
+  .steps li::before {
+    content: "0" counter(s);
+    display: block; font-family: var(--mono); font-size: 13px; color: var(--accent);
+    padding-bottom: 14px; margin-bottom: 18px; border-bottom: 1px solid var(--line-2);
+  }
+  .steps h3 { font-family: var(--serif); font-size: 26px; margin-bottom: 8px; }
+  .steps p { margin: 0; color: var(--muted); font-size: 15.5px; }
+  .note { margin-top: 48px; font-size: 15px; color: var(--dim); font-family: var(--mono); max-width: 48em; }
+
+  /* Cards */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 52px; }
+  .card {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 30px 28px 32px;
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover { border-color: var(--line-2); transform: translateY(-2px); }
+  .card .k { font-family: var(--mono); font-size: 12px; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; }
+  .card h3 { font-family: var(--serif); font-size: 25px; line-height: 1.2; margin: 14px 0 12px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+  .card .ic { width: 34px; height: 34px; margin-bottom: 22px; color: var(--accent); }
+
+  /* Pilot */
+  .pilot { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: start; }
+  .facts { border: 1px solid var(--line-2); border-radius: 12px; background: var(--bg-2); margin: 0; padding: 0; list-style: none; }
+  .facts li { display: flex; justify-content: space-between; gap: 20px; padding: 16px 22px; border-bottom: 1px solid var(--line); font-size: 15px; }
+  .facts li:last-child { border-bottom: 0; }
+  .facts span:first-child { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); padding-top: 3px; }
+  .facts span:last-child { text-align: right; }
+  .pilot p { color: var(--muted); margin: 18px 0 0; }
+
+  /* Contact */
+  .contact { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: start; }
+  .contact p { color: var(--muted); margin: 18px 0 0; }
+  .mailbox { border: 1px solid var(--line-2); border-radius: 12px; padding: 28px; background: var(--bg-2); }
+  .mailbox .eyebrow { margin-bottom: 10px; }
+  .mailbox a.mail {
+    display: block; font-family: var(--mono); font-size: 15px; color: var(--text); word-break: break-all;
+    text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 4px; margin-bottom: 22px;
+  }
+  .mailbox a.mail:hover { color: var(--accent); }
+  .mailbox small { display: block; color: var(--dim); font-size: 14px; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--dim); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 13px; }
+
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+  @media (max-width: 900px) {
+    .steps { grid-template-columns: 1fr 1fr; row-gap: 40px; }
+    .cards { grid-template-columns: 1fr; }
+    .pilot, .contact { grid-template-columns: 1fr; gap: 36px; }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    section { padding: 68px 0; }
+    .hero { padding: 64px 0 64px; }
+    .wrap { padding: 0 20px; }
+    nav { gap: 16px; }
+    nav a.hide-sm { display: none; }
+    .pitch { font-size: 17px; }
+    .strip { grid-template-columns: 1fr 1fr; margin-top: 52px; }
+    .strip div:nth-child(2) { border-right: 0; }
+    .strip div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+    .steps { grid-template-columns: 1fr; }
+    .steps li { padding-right: 0; }
+    .facts li { flex-direction: column; gap: 4px; }
+    .facts span:last-child { text-align: left; }
+  }
+  @media (max-width: 400px) {
+    .logo { font-size: 15px; }
+    nav a.cta { padding: 6px 10px; }
+    .btn { width: 100%; text-align: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#top" aria-label="Minos home">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5 25V7l11 11L27 7v18" stroke="#e8b04a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      Minos
+    </a>
+    <nav aria-label="Primary">
+      <a class="hide-sm" href="#how">How it works</a>
+      <a class="hide-sm" href="#approach">Approach</a>
+      <a class="hide-sm" href="#pilot">Pilot</a>
+      <a class="cta" href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="tag"><i></i> Early-stage, running a pilot</div>
+      <h1>Know whether your LLM tools are <em>good enough</em> to ship, and to stay shipped.</h1>
+      <p class="pitch">Minos is an evaluation and monitoring platform for LLM-based tools deployed inside enterprises, from chatbots to code review bots. Plug in your tool with minimal configuration. Minos builds the evaluation pipeline, acts as a deployment gate in your CI/CD, and keeps watching quality in production with human feedback in the loop.</p>
+      <div class="btn-row">
+        <a class="btn primary" href="mailto:veli.karakaya@ug.bilkent.edu.tr?subject=Minos%20inquiry">Contact us</a>
+        <a class="btn ghost" href="#how">See how it works</a>
+      </div>
+      <div class="strip" aria-label="Pipeline overview">
+        <div class="on"><b>Pre-deployment</b>evaluate, then gate</div>
+        <div><b>Release</b>CI/CD checkpoint</div>
+        <div class="on"><b>Production</b>continuous monitoring</div>
+        <div><b>Humans</b>review what is uncertain</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h2>From first connection to continuous quality, in four steps.</h2>
+      <p class="lede">One trace store spans pre-deployment and post-deployment, so what you test before a release and what you see after it are directly comparable.</p>
+      <ol class="steps">
+        <li>
+          <h3>Connect</h3>
+          <p>Point Minos at your LLM-powered tool with minimal configuration. No rewrite of your application and no labeled dataset required to begin.</p>
+        </li>
+        <li>
+          <h3>Induce</h3>
+          <p>Minos mines your existing tickets, logs and documentation to build an evaluation suite tailored to your tool and your domain.</p>
+        </li>
+        <li>
+          <h3>Gate</h3>
+          <p>The evaluation pipeline runs in CI/CD as a deployment gate. A change that degrades quality does not reach your users.</p>
+        </li>
+        <li>
+          <h3>Monitor</h3>
+          <p>In production, Minos keeps scoring real traffic and sends uncertain cases to people, so quality is tracked and reviewed over time.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="approach">
+    <div class="wrap">
+      <p class="eyebrow">Our approach</p>
+      <h2>Three methods that make automated evaluation trustworthy.</h2>
+      <p class="lede">LLM-as-a-judge is only useful if you can trust the judge. Each component below targets a specific reason it usually cannot be trusted.</p>
+      <div class="cards">
+        <article class="card">
+          <svg class="ic" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><path d="M18 4v6M18 26v6M4 18h6M26 18h6M8.1 8.1l4.2 4.2M23.7 23.7l4.2 4.2M27.9 8.1l-4.2 4.2M12.3 23.7l-4.2 4.2"/></svg>
+          <div class="k">Component 01</div>
+          <h3>Cold-start pipeline induction</h3>
+          <p>When no labeled data exists, we mine the artifacts a company already has, such as tickets, logs and documentation, to build an evaluation suite from scratch.</p>
+        </article>
+        <article class="card">
+          <svg class="ic" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 28V8M6 28h24"/><path d="M10 22l6-6 5 4 8-9"/><circle cx="29" cy="11" r="1.6"/></svg>
+          <div class="k">Component 02</div>
+          <h3>Active learning-based judge calibration</h3>
+          <p>We align an LLM-as-a-judge with domain experts using only a few labels, choosing the most informative cases for experts to review.</p>
+        </article>
+        <article class="card">
+          <svg class="ic" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18h8l4-9 4 18 4-9h4"/><path d="M6 31h24" opacity=".5"/></svg>
+          <div class="k">Component 03</div>
+          <h3>Judge reliability layer</h3>
+          <p>Every verdict carries a confidence estimate. Confident verdicts flow through automatically, and uncertain cases are routed to human reviewers.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="pilot">
+    <div class="wrap pilot">
+      <div>
+        <p class="eyebrow">Current pilot</p>
+        <h2>Evaluating a customer-facing chatbot for a major airline.</h2>
+        <p>We are running our first pilot with a major airline, evaluating its customer-facing chatbot against a curated golden dataset. Results are reviewed in weekly cycles with the people who own the tool, which keeps the judge calibrated and the findings grounded in how the business actually defines a good answer.</p>
+      </div>
+      <ul class="facts" aria-label="Pilot details">
+        <li><span>Tool</span><span>Customer-facing chatbot</span></li>
+        <li><span>Customer</span><span>A major airline</span></li>
+        <li><span>Reference</span><span>Curated golden dataset</span></li>
+        <li><span>Cadence</span><span>Weekly review cycles</span></li>
+        <li><span>Status</span><span>In progress</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap contact">
+      <div>
+        <p class="eyebrow">Team and contact</p>
+        <h2>Built by researchers who study LLM evaluation.</h2>
+        <p>Minos comes from a team of computer engineering researchers at Bilkent University, working on LLM evaluation, code review and software analytics. We are based in Ankara, Turkey.</p>
+        <p>If you run an LLM-powered tool inside your company and want to know how it really performs, we would like to hear from you.</p>
+      </div>
+      <div class="mailbox">
+        <p class="eyebrow">Get in touch</p>
+        <a class="mail" href="mailto:veli.karakaya@ug.bilkent.edu.tr?subject=Minos%20inquiry">veli.karakaya@ug.bilkent.edu.tr</a>
+        <small>Tell us what tool you are running and how you evaluate it today.</small>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; <span id="yr">2026</span> Minos</span>
+    <span>Ankara, Turkey</span>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+</body>
+</html>
