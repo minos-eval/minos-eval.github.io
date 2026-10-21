@@ -97,7 +97,8 @@
 
   /* ---------- Base ---------- */
   *, *::before, *::after { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  /* scroll-padding keeps anchor targets and keyboard focus clear of the fixed nav */
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 96px; }
   body {
     margin: 0;
     background: var(--bg);
@@ -190,15 +191,26 @@
   }
   .hero > * { position: relative; z-index: 1; }
 
+  /* Fixed floating nav; it stays white in both themes so the logo always sits on white. */
+  .nav-wrap { position: fixed; top: 0; left: 0; right: 0; z-index: 50; pointer-events: none; }
+  .nav-wrap .nav, .nav-wrap .mobile-menu { pointer-events: auto; }
   .nav {
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    height: 64px; margin-top: 16px; padding: 0 8px 0 10px;
+    height: 64px; max-width: 1096px; margin: 16px auto 0; padding: 0 8px 0 10px;
     background: var(--card); border: 1px solid var(--border); border-radius: 18px;
     box-shadow: 0 12px 32px -14px rgba(0, 0, 0, .55);
+    transition: height .3s var(--ease-out), max-width .3s var(--ease-out), margin-top .3s var(--ease-out), border-radius .3s var(--ease-out), box-shadow .3s var(--ease-out);
+  }
+  /* Scrolled: shorter, narrower on desktop, tighter to the top, stronger shadow. */
+  .nav-wrap.scrolled .nav {
+    height: 52px; max-width: 920px; margin-top: 6px; border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .1), 0 16px 40px -12px rgba(0, 0, 0, .55);
   }
   .brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
-  .brand img { width: 44px; height: 44px; }
-  .brand span { font-family: var(--font-display); font-weight: 800; font-size: 19px; letter-spacing: .14em; }
+  .brand img { width: 44px; height: 44px; transition: width .3s var(--ease-out), height .3s var(--ease-out); }
+  .nav-wrap.scrolled .nav .brand img { width: 34px; height: 34px; }
+  .brand span { font-family: var(--font-display); font-weight: 800; font-size: 19px; letter-spacing: .14em; transition: font-size .3s var(--ease-out); }
+  .nav-wrap.scrolled .nav .brand span { font-size: 16px; }
   .nav-links { display: none; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
   .nav-links a {
     display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
@@ -233,21 +245,12 @@
 
   .hero-body {
     display: grid; gap: 48px; align-items: center;
-    padding: 40px 0 72px;
+    padding: 128px 0 72px; /* clears the fixed nav (16px + 64px) */
   }
   @media (min-width: 1024px) {
-    .hero-body { grid-template-columns: minmax(0, 1.2fr) minmax(0, .9fr); gap: 56px; padding: 64px 0 104px; }
+    .hero-body { grid-template-columns: minmax(0, 1.2fr) minmax(0, .9fr); gap: 56px; padding: 152px 0 104px; }
   }
-  .tag {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 6px 12px 6px 8px; border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .04);
-    font-size: 13px; color: var(--muted);
-  }
-  .tag b { font-weight: 600; color: var(--text); }
-  .tag .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warning); box-shadow: 0 0 0 4px rgba(251, 191, 36, .15); }
   .hero h1 {
-    margin-top: 24px;
     font-size: clamp(36px, 4.6vw, 60px);
     font-weight: 800;
     letter-spacing: -0.03em;
@@ -323,7 +326,6 @@
   .pill-neutral { color: var(--neutral); background: var(--neutral-bg); }
 
   /* ---------- Sections ---------- */
-  section { scroll-margin-top: 16px; }
   .section { padding: 88px 0; }
   @media (min-width: 1024px) { .section { padding: 120px 0; } }
   .section + .section { border-top: 1px solid var(--border); }
@@ -598,7 +600,7 @@
   </defs>
 </svg>
 
-<header class="hero on-dark" id="top">
+<div class="nav-wrap">
   <div class="container">
     <nav class="nav on-light" aria-label="Primary">
       <a class="brand" href="#top" aria-label="Minos home">
@@ -633,10 +635,13 @@
         <li><a href="#contact">Contact us</a></li>
       </ul>
     </div>
+  </div>
+</div>
 
+<header class="hero on-dark" id="top">
+  <div class="container">
     <div class="hero-body">
       <div>
-        <span class="tag"><span class="dot" aria-hidden="true"></span><b>In development</b> · Pilot with a major airline</span>
         <h1>Know whether your LLM tools are <em>good enough</em> to ship, and to stay shipped.</h1>
         <p class="lede">Minos is an evaluation framework for LLM-based applications. It drafts an evaluation pipeline from the artifacts you already have, checks its own LLM judges against human labels, and sends uncertain cases to people instead of guessing.</p>
         <div class="hero-ctas">
@@ -1140,6 +1145,16 @@
     });
     if (media.addEventListener) media.addEventListener("change", sync);
     sync();
+
+    // Compact nav once the page has scrolled.
+    var navWrap = document.querySelector(".nav-wrap");
+    var scrolled = false;
+    function onScroll() {
+      var next = window.scrollY > 8;
+      if (next !== scrolled) { scrolled = next; navWrap.classList.toggle("scrolled", next); }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
 
     // Mobile menu
     var menuBtn = document.querySelector(".menu-btn");

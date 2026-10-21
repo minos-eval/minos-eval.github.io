@@ -38,6 +38,7 @@ Light values are tuned to reach 4.5:1 on their tinted backgrounds.
 - Inline SVG icons (Lucide paths), never emoji.
 - Illustrative UI (reports, queues) is labeled "Illustrative"; numbers from the spec are labeled as design targets.
 - Comparison claims use the spec's wording ("Not documented", "Partial", "Planned"), never "No"/"Yes".
+- Nav is fixed at the top on every width and compacts after scrolling; `scroll-padding-top: 96px` keeps anchors and focus clear of it.
 - Focus ring 3px `--primary`; targets at least 44px; `prefers-reduced-motion` disables reveal motion.
 - Responsive checks at 375 / 768 / 1024 / 1440. No horizontal scroll; wide tables scroll inside their own wrapper.
 - The pilot customer stays anonymous ("a major airline") unless the team approves naming it.
