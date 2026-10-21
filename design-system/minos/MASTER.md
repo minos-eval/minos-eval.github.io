@@ -7,7 +7,8 @@ pattern **Trust & Authority**, style **Accessible & Ethical**. Colors and type b
 ## Brand
 - Name: MINOS. Logo: labrys mark, two colors only, never recolored.
   - Black `#1B1714` (left blade, left band, handle), red `#8F2A22` (right blade, right band).
-  - On dark backgrounds use `assets/minos-logo-white-tile.svg` (logo inside a white rounded tile). On light, `assets/minos-logo.svg`.
+  - On the site, the logo (`assets/minos-logo.svg`) always sits on a white surface: the floating white nav bar over the hero, and a white pill in the footer (`.on-light`). Avoid a lone white square tile on dark backgrounds; it reads like an app icon.
+  - `assets/minos-logo-white-tile.svg` is kept for the favicon only.
 - Do not use the old purple palette (`#2A017B`) or any purple/pink gradient.
 
 ## Typography

@@ -45,9 +45,6 @@
 
     --hero-1: #24000A; --hero-2: #3D000C; --hero-3: #5E0014;
 
-    --logo-light: block;
-    --logo-dark: none;
-
     --font-display: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
     --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -72,7 +69,6 @@
       --warning: #FBBF24; --warning-bg: rgba(251, 191, 36, .12);
       --info: #60A5FA;    --info-bg: rgba(96, 165, 250, .13);
       --neutral: #A1A1AA; --neutral-bg: rgba(161, 161, 170, .12);
-      --logo-light: none; --logo-dark: block;
       --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px -16px rgba(0, 0, 0, .6);
       color-scheme: dark;
     }
@@ -87,9 +83,16 @@
     --warning: #FBBF24; --warning-bg: rgba(251, 191, 36, .12);
     --info: #60A5FA;    --info-bg: rgba(96, 165, 250, .13);
     --neutral: #A1A1AA; --neutral-bg: rgba(161, 161, 170, .12);
-    --logo-light: none; --logo-dark: block;
     --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px -16px rgba(0, 0, 0, .6);
     color-scheme: dark;
+  }
+  /* Light surface in any theme: the logo sits on white instead of a separate white tile. */
+  .on-light {
+    --primary: #C8102E; --on-primary: #FFFFFF; --secondary: #FDECEE;
+    --bg: #FAFAFA; --card: #FFFFFF; --sidebar: #F4F4F5; --border: #E5E5E8;
+    --text: #27272A; --muted: #6B6B74;
+    color: var(--text);
+    color-scheme: light;
   }
 
   /* ---------- Base ---------- */
@@ -187,9 +190,14 @@
   }
   .hero > * { position: relative; z-index: 1; }
 
-  .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 76px; }
-  .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
-  .brand img { width: 36px; height: 36px; border-radius: 7px; }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    height: 64px; margin-top: 16px; padding: 0 8px 0 10px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+    box-shadow: 0 12px 32px -14px rgba(0, 0, 0, .55);
+  }
+  .brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+  .brand img { width: 44px; height: 44px; }
   .brand span { font-family: var(--font-display); font-weight: 800; font-size: 19px; letter-spacing: .14em; }
   .nav-links { display: none; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
   .nav-links a {
@@ -205,7 +213,7 @@
     background: transparent; color: var(--text); cursor: pointer;
     transition: border-color .2s var(--ease-out), background-color .2s var(--ease-out);
   }
-  .icon-btn:hover { border-color: color-mix(in srgb, var(--text) 45%, transparent); background: rgba(255, 255, 255, .05); }
+  .icon-btn:hover { border-color: color-mix(in srgb, var(--text) 45%, transparent); background: var(--sidebar); }
   .theme-toggle .moon { display: none; }
   .theme-toggle[data-mode="dark"] .sun { display: none; }
   .theme-toggle[data-mode="dark"] .moon { display: block; }
@@ -216,11 +224,11 @@
     .nav-cta { display: inline-flex; }
     .menu-btn { display: none; }
   }
-  .mobile-menu { display: none; padding: 0 0 16px; }
+  .mobile-menu { display: none; padding: 8px 0 0; }
   .mobile-menu.open { display: block; }
-  .mobile-menu ul { list-style: none; margin: 0; padding: 8px; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(19, 19, 21, .6); }
+  .mobile-menu ul { list-style: none; margin: 0; padding: 8px; border: 1px solid var(--border); border-radius: 18px; background: var(--card); box-shadow: 0 12px 32px -14px rgba(0, 0, 0, .55); }
   .mobile-menu a { display: flex; align-items: center; min-height: 48px; padding: 0 14px; text-decoration: none; font-weight: 500; border-radius: var(--radius-sm); }
-  .mobile-menu a:hover { background: rgba(255, 255, 255, .05); }
+  .mobile-menu a:hover { background: var(--sidebar); }
   @media (min-width: 900px) { .mobile-menu, .mobile-menu.open { display: none; } }
 
   .hero-body {
@@ -540,10 +548,9 @@
 
   footer { padding: 40px 0 48px; border-top: 1px solid var(--border); }
   .foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
-  .foot .brand img { width: 30px; height: 30px; }
-  .foot .brand span { font-size: 16px; }
-  .logo-l { display: var(--logo-light); }
-  .logo-d { display: var(--logo-dark); }
+  .foot .brand { padding: 2px 16px 2px 4px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); }
+  .foot .brand img { width: 40px; height: 40px; }
+  .foot .brand span { font-size: 15px; }
   .foot p { font-size: 14px; color: var(--muted); }
 
   /* ---------- Motion ---------- */
@@ -593,9 +600,9 @@
 
 <header class="hero on-dark" id="top">
   <div class="container">
-    <nav class="nav" aria-label="Primary">
+    <nav class="nav on-light" aria-label="Primary">
       <a class="brand" href="#top" aria-label="Minos home">
-        <img src="assets/minos-logo-white-tile.svg" alt="" width="36" height="36">
+        <img src="assets/minos-logo.svg" alt="" width="44" height="44">
         <span>MINOS</span>
       </a>
       <ul class="nav-links">
@@ -616,7 +623,7 @@
         <a class="btn btn-primary nav-cta" href="#contact">Contact us</a>
       </div>
     </nav>
-    <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu on-light" id="mobile-menu">
       <ul>
         <li><a href="#problem">Problem</a></li>
         <li><a href="#how">How it works</a></li>
@@ -1102,9 +1109,8 @@
 
 <footer>
   <div class="container foot">
-    <a class="brand" href="#top" aria-label="Minos, back to top">
-      <img class="logo-l" src="assets/minos-logo.svg" alt="" width="30" height="30">
-      <img class="logo-d" src="assets/minos-logo-white-tile.svg" alt="" width="30" height="30">
+    <a class="brand on-light" href="#top" aria-label="Minos, back to top">
+      <img src="assets/minos-logo.svg" alt="" width="40" height="40">
       <span>MINOS</span>
     </a>
     <p>© 2026 Minos · Bilkent University, Department of Computer Engineering</p>
