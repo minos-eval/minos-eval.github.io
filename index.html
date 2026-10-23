@@ -535,6 +535,25 @@
   .person.supervisor { grid-column: 1 / -1; }
   .person.supervisor .avatar { background: var(--primary); color: var(--on-primary); }
 
+  /* Documents */
+  .docs-group { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--card); overflow: hidden; }
+  .docs-group-head {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px;
+    padding: 16px 22px; border-bottom: 1px solid var(--border); background: var(--sidebar);
+  }
+  .docs-group-head h3 { font-size: 16px; font-weight: 700; }
+  .docs-group-head span { font-size: 13.5px; color: var(--muted); }
+  .doc-list { list-style: none; margin: 0; padding: 0; }
+  .doc { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px 16px; align-items: center; padding: 18px 22px; }
+  .doc + .doc { border-top: 1px solid var(--border); }
+  @media (min-width: 640px) { .doc { grid-template-columns: auto minmax(0, 1fr) auto; } }
+  .doc-ico { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--secondary); color: var(--primary); }
+  .doc-title { font-weight: 600; }
+  .doc-meta { display: block; margin-top: 2px; font-size: 13.5px; color: var(--muted); }
+  .doc-actions { display: flex; flex-wrap: wrap; gap: 8px; grid-column: 1 / -1; }
+  @media (min-width: 640px) { .doc-actions { grid-column: auto; } }
+  .doc-actions .btn { min-height: 44px; padding: 0 16px; font-size: 14px; }
+
   /* Contact */
   .contact {
     display: grid; gap: 28px; align-items: center;
@@ -613,6 +632,7 @@
         <li><a href="#approach">Approach</a></li>
         <li><a href="#modules">Modules</a></li>
         <li><a href="#team">Team</a></li>
+        <li><a href="#documents">Documents</a></li>
       </ul>
       <div class="nav-actions">
         <button class="icon-btn theme-toggle" type="button" aria-label="Switch color theme">
@@ -632,6 +652,7 @@
         <li><a href="#approach">Approach</a></li>
         <li><a href="#modules">Modules</a></li>
         <li><a href="#team">Team</a></li>
+        <li><a href="#documents">Documents</a></li>
         <li><a href="#contact">Contact us</a></li>
       </ul>
     </div>
@@ -1092,6 +1113,36 @@
         <li class="person"><span class="avatar" aria-hidden="true">SŞ</span><div><strong>Selman Şahin</strong><span>Team member</span></div></li>
         <li class="person"><span class="avatar" aria-hidden="true">BP</span><div><strong>Barış Peksak</strong><span>Team member</span></div></li>
       </ul>
+    </div>
+  </section>
+
+  <!-- CS491 documents -->
+  <section class="section" id="documents" aria-labelledby="documents-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">CS491 documents</span>
+        <h2 id="documents-title">Project reports and meeting records.</h2>
+        <p>Documents submitted for CS491/492 Senior Design Project at Bilkent University.</p>
+      </div>
+      <div class="docs-group reveal">
+        <div class="docs-group-head">
+          <h3>Meeting minutes</h3>
+          <span>CS491 · Fall 2026</span>
+        </div>
+        <ul class="doc-list">
+          <li class="doc">
+            <span class="doc-ico" aria-hidden="true"><svg class="i"><use href="#i-file"/></svg></span>
+            <div>
+              <span class="doc-title">Meeting Minutes #1: Project introduction</span>
+              <span class="doc-meta"><span class="mono">21 Oct 2026</span> · PDF, 3 pages, 210 KB</span>
+            </div>
+            <div class="doc-actions">
+              <a class="btn btn-primary" href="documents/cs491/Minos_MeetingMinutesReport_01_21102026_v1.pdf" target="_blank" rel="noopener">View <svg class="i i-arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+              <a class="btn btn-ghost" href="documents/cs491/Minos_MeetingMinutesReport_01_21102026_v1.pdf" download><svg class="i" aria-hidden="true"><use href="#i-arrow-down"/></svg>Download</a>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 
